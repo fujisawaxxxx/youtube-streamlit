@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=4nsTce1Oce8
+27:01
+
+streamlit run app.py
+
+git config --global user.name "fujisawaxxxx"
+git config --global user.email "a_fujisawa@ag-media.co.jp"
+
+git config --global --list
