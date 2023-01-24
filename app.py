@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.title('サプーアプリ')
-st.caption('あああこれはサプーの動画用のテストアプリです')
+st.caption('これはサプーの動画用のテストアプリです')
 st.subheader('自己紹介')
 st.text('Pythonに関する情報')
 
