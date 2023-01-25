@@ -8,6 +8,8 @@ git config --global user.email "a_fujisawa@ag-media.co.jp"
 
 git config --global --list
 
+
+
 git remote add origin https://github.com/fujisawaxxxx/youtube-streamlit.git
 ↑
 上記でエラーが出るとき
@@ -16,3 +18,5 @@ git remote rm origin
 
 ライブラリのバージョン確認
 pip freeze
+
+git commit -m "first commit"
