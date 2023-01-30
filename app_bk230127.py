@@ -6,8 +6,6 @@ import hashlib
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
-
-
 def make_hashes(password):
 	return hashlib.sha256(str.encode(password)).hexdigest()
 
@@ -40,8 +38,7 @@ def login_user(username,password):
 
 def main():
 
-	btn_flg = False
-	
+
 	st.title("在庫管理")
 
 	menu = ["ホーム","ログイン","管理者メニュー","管理者メニュー(database)"]
@@ -50,38 +47,8 @@ def main():
 	if choice == "ホーム":
 		st.subheader("ホーム画面です")
 
-		#初期化（何もなければ0を入れる）
-		if 'key' not in st.session_state:
-			st.session_state['key'] = '0'
-
-		if st.button('アカウントの作成'):
-			st.info("ユーザー名は既にアカウント登録されています。上書きしますか")
-			
-			#更新保存
-			st.session_state['key'] = '1'
-			print("keyに1")
-
-
-		if st.session_state['key'] == '1':
-			if st.button("はい"):
-				st.success("更新しました。")
-				print("更新しました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-					
-
-			if st.button("いいえ"):
-				st.warning("キャンセルしました。")
-				print("キャンセルしました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-		else:
-			print("keyが0")
 
 	elif choice == "ログイン":
-		print("ログイン")
 		st.subheader("ログイン画面です")
 
 		username = st.sidebar.text_input("ユーザー名を入力してください")
@@ -95,10 +62,9 @@ def main():
 			result = login_user(username,check_hashes(password,hashed_pswd))
 			if result:
 				print(username)
-				search=username
 				st.success("{}さんでログインしました".format(username))
 
-				c.execute("select * from userstable WHERE username = search")
+				c.execute("select * from userstable WHERE username = username")
 				data = c.fetchall()
 				st.markdown(data)
 
@@ -107,7 +73,6 @@ def main():
 
 
 	elif choice == "管理者メニュー":
-		
 		st.subheader("新しいアカウントを作成します")
 
 		new_user = st.text_input("ユーザー名")
@@ -123,9 +88,6 @@ def main():
 		new_atena = st.text_input("宛名")
 		new_tel = st.text_input("電話")
 
-		#初期化（何もなければ0を入れる）
-		if 'key' not in st.session_state:
-			st.session_state['key'] = '0'
 
 		if st.button("アカウント作成"):
 
@@ -140,35 +102,10 @@ def main():
 				create_user()
 				add_user(new_user, make_hashes(new_password),new_hinmei,new_suryo,new_yu_no,new_ad,new_ad2,new_ad3,new_atena,new_tel)
 				st.success("アカウントの作成に成功しました")
+				st.info("ログイン画面からログインしてください")
 			else:
 				print("ゼロ件ではないです")
-				st.info("ユーザー名は既にアカウント登録されています。上書きしますか")
-		
-
-				#更新保存
-				st.session_state['key'] = '1'
-				print("keyに1")
-
-		#	
-		if st.session_state['key'] == '1':
-			if st.button("はい"):
-				st.success("更新しました。")
-				print("更新しました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-				
-				#以下に更新作業を記載↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
-			if st.button("いいえ"):
-				st.warning("キャンセルしました。")
-				print("キャンセルしました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-		else:
-			print("keyが0")
-
+				st.info("ユーザー名は既にアカウント登録されているため作成できません")
 
 		st.subheader("データ全件削除します。")
 		if st.button("削除"):
@@ -185,7 +122,6 @@ def main():
 
 			# クローズ
 			conn.close()
-
 	elif choice == "管理者メニュー(database)":
 		
 		st.subheader("データベース全件")

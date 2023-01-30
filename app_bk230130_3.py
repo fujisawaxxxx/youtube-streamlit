@@ -123,9 +123,6 @@ def main():
 		new_atena = st.text_input("宛名")
 		new_tel = st.text_input("電話")
 
-		#初期化（何もなければ0を入れる）
-		if 'key' not in st.session_state:
-			st.session_state['key'] = '0'
 
 		if st.button("アカウント作成"):
 
@@ -143,31 +140,18 @@ def main():
 			else:
 				print("ゼロ件ではないです")
 				st.info("ユーザー名は既にアカウント登録されています。上書きしますか")
+				btn_flg = True
+
+		if btn_flg:
+			print("フラグがtrueになりました")
+			st.button("はい") 
+			st.button("いいえ")
 		
+		if btn_flg==True and st.button("はい"):
+			print("はいが押されました")
+	
 
-				#更新保存
-				st.session_state['key'] = '1'
-				print("keyに1")
 
-		#	
-		if st.session_state['key'] == '1':
-			if st.button("はい"):
-				st.success("更新しました。")
-				print("更新しました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-				
-				#以下に更新作業を記載↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
-			if st.button("いいえ"):
-				st.warning("キャンセルしました。")
-				print("キャンセルしました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-		else:
-			print("keyが0")
 
 
 		st.subheader("データ全件削除します。")

@@ -53,32 +53,55 @@ def main():
 		#初期化（何もなければ0を入れる）
 		if 'key' not in st.session_state:
 			st.session_state['key'] = '0'
+		
+		if 'key2' not in st.session_state:
+			st.session_state['key2'] = '0'
+
+		st.info(st.session_state['key'])
+		st.info(st.session_state['key2'])
 
 		if st.button('アカウントの作成'):
 			st.info("ユーザー名は既にアカウント登録されています。上書きしますか")
-			
 			#更新保存
 			st.session_state['key'] = '1'
-			print("keyに1")
 
 
 		if st.session_state['key'] == '1':
 			if st.button("はい"):
-				st.success("更新しました。")
-				print("更新しました。")
-
-				#更新保存(初期化)
+				st.session_state['key2'] = '1'
+				st.info("更新しました。")
+				#更新保存
 				st.session_state['key'] = '0'
-					
+		
+		# if st.button('アカウントの作成'):
+		# 	#更新保存
+		# 	st.session_state['key2'] = '1'
+		
+		# if st.session_state['key2'] == '1':
+		# 	print("はいが押された")
 
-			if st.button("いいえ"):
-				st.warning("キャンセルしました。")
-				print("キャンセルしました。")
 
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-		else:
-			print("keyが0")
+		st.info(st.session_state['key'])
+
+		# yes = False
+
+		# if st.button('アカウントの作成'):
+		# 	st.info("ユーザー名は既にアカウント登録されています。上書きしますか")
+
+		# 	if 'increment' not in st.session_state: # 初期化
+		# 		st.session_state['increment'] = 0
+
+		# 	st.write(f"（increment）は{st.session_state['increment']}です。")
+
+		# 	if st.button("はい"):
+		# 		yes = True
+		# 		st.session_state['increment'] = 1 # 値を増やす
+		# 		st.write(f"{st.session_state['increment']}になりました。")
+
+		# if yes and st.session_state['increment'] ==1:
+		# 	print("はいが押された")
+
+
 
 	elif choice == "ログイン":
 		print("ログイン")
@@ -123,9 +146,6 @@ def main():
 		new_atena = st.text_input("宛名")
 		new_tel = st.text_input("電話")
 
-		#初期化（何もなければ0を入れる）
-		if 'key' not in st.session_state:
-			st.session_state['key'] = '0'
 
 		if st.button("アカウント作成"):
 
@@ -143,31 +163,18 @@ def main():
 			else:
 				print("ゼロ件ではないです")
 				st.info("ユーザー名は既にアカウント登録されています。上書きしますか")
+				btn_flg = True
+
+		if btn_flg:
+			print("フラグがtrueになりました")
+			st.button("はい") 
+			st.button("いいえ")
 		
+		if btn_flg==True and st.button("はい"):
+			print("はいが押されました")
+	
 
-				#更新保存
-				st.session_state['key'] = '1'
-				print("keyに1")
 
-		#	
-		if st.session_state['key'] == '1':
-			if st.button("はい"):
-				st.success("更新しました。")
-				print("更新しました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-				
-				#以下に更新作業を記載↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
-			if st.button("いいえ"):
-				st.warning("キャンセルしました。")
-				print("キャンセルしました。")
-
-				#更新保存(初期化)
-				st.session_state['key'] = '0'
-		else:
-			print("keyが0")
 
 
 		st.subheader("データ全件削除します。")
