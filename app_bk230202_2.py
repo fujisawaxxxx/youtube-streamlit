@@ -4,7 +4,6 @@ import pandas.io.sql as psql
 import sqlite3
 import hashlib
 import webbrowser
-import smtplib
 
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
@@ -177,35 +176,6 @@ def success_login(username):
 	ha_suryo = st.text_input("数量")
 
 	st.button("Open Google", open_google)
-
-	mail()
-
-
-def send_email(to, subject, message):
-	try:
-		server = smtplib.SMTP('smtp.gmail.com', 587)
-		server.ehlo()
-		server.starttls()
-		server.login('a_fujisawa@ag-media.co.jp', '51s93c7w')
-		message = 'Subject: {}\n\n{}'.format(subject, message)
-		server.sendmail('a_fujisawa@ag-media.co.jp', to, message)
-		server.quit()
-		return True
-	except Exception as e:
-		print(e)
-		return False
-
-def mail():
-	st.title('メール送信アプリ')
-	to = st.text_input('宛先：')
-	subject = st.text_input('件名：')
-	message = st.text_area('本文：')
-	if st.button('送信'):
-		result = send_email(to, subject, message)
-		if result:
-			st.success('メールを送信しました')
-		else:
-			st.error('メールの送信に失敗しました')
 
 def main():
 
