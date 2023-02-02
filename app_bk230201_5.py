@@ -3,7 +3,6 @@ import pandas as pd
 import pandas.io.sql as psql
 import sqlite3
 import hashlib
-import webbrowser
 
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
@@ -75,7 +74,6 @@ def kanri():
 	#初期化（何もなければ0を入れる）
 	if 'key' not in st.session_state:
 		st.session_state['key'] = '0'
-		print('keyの初期化')
 
 	
 
@@ -119,14 +117,9 @@ def kanri():
 
 	#全件表示
 	st.subheader("データベース全件")
-
-	#ユーザーのDBを表示
-	c.execute('SELECT * FROM userstable')
+	c.execute("select * from userstable")
 	data = c.fetchall()
-	df = pd.DataFrame(data)
-	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
-	st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
-
+	st.markdown(data)
 
 	#全件削除
 	st.subheader("データ全件削除します。")
@@ -145,40 +138,7 @@ def kanri():
 		# クローズ
 		conn.close()
 
-def open_google():
-    webbrowser.open("https://www.google.com/")
-	
-def success_login(username):
-	#ユーザーのDBを表示
-	c.execute('SELECT * FROM userstable WHERE username =?', (username,))
-	data = c.fetchall()
-	df = pd.DataFrame(data)
-	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
-	st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
-	#st.markdown(df.to_html(), unsafe_allow_html=True)
-	
-	
-	c.execute('SELECT hinmei FROM userstable WHERE username =?', (username,))
-	item_names = [item[0] for item in c.fetchall()]
-	# Streamlitでプルダウンを追加する
-	selected_item_name = st.selectbox('発送する品名を選択してください', item_names)
-
-	st.info("発送先情報を入力してください")
-	
-	ha_yu_no = st.text_input("郵便")
-	ha_ad = st.text_input("住所")
-	ha_atena = st.text_input("宛名")
-	ha_tel = st.text_input("電話")
-	ha_suryo = st.text_input("数量")
-
-	st.button("Open Google", open_google)
-
 def main():
-
-	#初期化（何もなければ0を入れる）
-	if 'key2' not in st.session_state:
-		st.session_state['key2'] = '0'
-		print('key2の初期化')
 	
 	st.title("在庫管理")
 
@@ -193,32 +153,38 @@ def main():
 		password = st.sidebar.text_input("パスワードを入力してください",type='password')
 
 		if username =="a" and  password=="a":
-			print("管理者メニューに飛ぶ★初期状態")
 			kanri()
 		else:
-			print("管理者メニューじゃない★初期状態")
-			
-			#ログインボタンが押されたまたはkey2が保持されているとき
-			if st.sidebar.button("ログイン") or st.session_state['key2'] == '1':
-				#更新保存
-				st.session_state['key2'] = '1'
-				print("key2に1")
-
-				print("ユーザーログインしようとする★ログイン後")
+			if st.sidebar.button("ログイン"):
 				create_user()
+				hashed_pswd = make_hashes(password)
 
 				result = login_user(username,password)
-				if st.session_state['key2'] == '1':
-					if result:
-						print(username)
-						st.success("{}さんでログインしました".format(username))
+				if result:
+					print(username)
+					search=username
+					st.success("{}さんでログインしました".format(username))
 
-						success_login(username)
+
+
+
+					#ユーザーのDBを表示
+					c.execute('SELECT * FROM userstable WHERE username =?', (username,))
+					data = c.fetchall()
+					df = pd.DataFrame(data)
+					df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
+					st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
+					#st.markdown(df.to_html(), unsafe_allow_html=True)
 					
-						
-					else:
-						st.warning("ユーザー名かパスワードが間違っています")
-						
+
+					c.execute('SELECT hinmei FROM userstable WHERE username =?', (username,))
+					item_names = [item[0] for item in c.fetchall()]
+					# Streamlitでプルダウンを追加する
+					selected_item_name = st.selectbox('発送する品名を選択してください', item_names)
+
+
+				else:
+					st.warning("ユーザー名かパスワードが間違っています")
 
 
 

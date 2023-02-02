@@ -3,7 +3,6 @@ import pandas as pd
 import pandas.io.sql as psql
 import sqlite3
 import hashlib
-import webbrowser
 
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
@@ -119,14 +118,9 @@ def kanri():
 
 	#全件表示
 	st.subheader("データベース全件")
-
-	#ユーザーのDBを表示
-	c.execute('SELECT * FROM userstable')
+	c.execute("select * from userstable")
 	data = c.fetchall()
-	df = pd.DataFrame(data)
-	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
-	st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
-
+	st.markdown(data)
 
 	#全件削除
 	st.subheader("データ全件削除します。")
@@ -144,34 +138,6 @@ def kanri():
 
 		# クローズ
 		conn.close()
-
-def open_google():
-    webbrowser.open("https://www.google.com/")
-	
-def success_login(username):
-	#ユーザーのDBを表示
-	c.execute('SELECT * FROM userstable WHERE username =?', (username,))
-	data = c.fetchall()
-	df = pd.DataFrame(data)
-	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
-	st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
-	#st.markdown(df.to_html(), unsafe_allow_html=True)
-	
-	
-	c.execute('SELECT hinmei FROM userstable WHERE username =?', (username,))
-	item_names = [item[0] for item in c.fetchall()]
-	# Streamlitでプルダウンを追加する
-	selected_item_name = st.selectbox('発送する品名を選択してください', item_names)
-
-	st.info("発送先情報を入力してください")
-	
-	ha_yu_no = st.text_input("郵便")
-	ha_ad = st.text_input("住所")
-	ha_atena = st.text_input("宛名")
-	ha_tel = st.text_input("電話")
-	ha_suryo = st.text_input("数量")
-
-	st.button("Open Google", open_google)
 
 def main():
 
@@ -213,7 +179,19 @@ def main():
 						print(username)
 						st.success("{}さんでログインしました".format(username))
 
-						success_login(username)
+						#ユーザーのDBを表示
+						c.execute('SELECT * FROM userstable WHERE username =?', (username,))
+						data = c.fetchall()
+						df = pd.DataFrame(data)
+						df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
+						st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
+						#st.markdown(df.to_html(), unsafe_allow_html=True)
+						
+
+						c.execute('SELECT hinmei FROM userstable WHERE username =?', (username,))
+						item_names = [item[0] for item in c.fetchall()]
+						# Streamlitでプルダウンを追加する
+						selected_item_name = st.selectbox('発送する品名を選択してください', item_names)
 					
 						
 					else:
