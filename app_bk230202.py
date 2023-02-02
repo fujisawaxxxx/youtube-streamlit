@@ -28,16 +28,12 @@ def create_user():
 	# c.execute('ALTER TABLE userstable ADD ad3  text')
 	# c.execute('ALTER TABLE userstable ADD atena  text')
 	# c.execute('ALTER TABLE userstable ADD tel  text')
-	# c.execute('ALTER TABLE userstable DROP ad2  text')
-	# c.execute('ALTER TABLE userstable DROP ad3  text')
-	# c.execute('ALTER TABLE userstable ADD omosa  text')
-	# c.execute('ALTER TABLE userstable ADD other  text')
-	# c.execute('ALTER TABLE userstable ADD other2  text')
-	c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT,hinmei TEXT,suryo TEXT,yu_no TEXT,ad TEXT,atena TEXT,tel TEXT,omosa text,other text)')
+
+	c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT,hinmei TEXT,suryo TEXT,yu_no TEXT,ad TEXT,ad2 TEXT,ad3 TEXT,atena TEXT,tel TEXT)')
 
 #アカウント作成
-def add_user(username,password,hinmei,suryo,yu_no,ad,atena,tel,omosa,other):
-	c.execute('INSERT INTO userstable(username,password,hinmei,suryo,yu_no,ad,atena,tel,omosa,other) VALUES (?,?,?,?,?,?,?,?,?,?)',(username,password,hinmei,suryo,yu_no,ad,atena,tel,omosa,other))
+def add_user(username,password,hinmei,suryo,yu_no,ad,ad2,ad3,atena,tel):
+	c.execute('INSERT INTO userstable(username,password,hinmei,suryo,yu_no,ad,ad2,ad3,atena,tel) VALUES (?,?,?,?,?,?,?,?,?,?)',(username,password,hinmei,suryo,yu_no,ad,ad2,ad3,atena,tel))
 	conn.commit()
 
 #ログイン
@@ -71,10 +67,10 @@ def kanri():
 	new_yu_no = st.text_input("郵便")
 	
 	new_ad = st.text_input("住所")
+	new_ad2 = st.text_input("住所2")
+	new_ad3 = st.text_input("住所3")
 	new_atena = st.text_input("宛名")
 	new_tel = st.text_input("電話")
-	new_omosa = st.text_input("１冊の重さ")
-	new_other = st.text_input("備考")
 
 	#初期化（何もなければ0を入れる）
 	if 'key' not in st.session_state:
@@ -91,7 +87,7 @@ def kanri():
 			print('ゼロ件なのでアカウントの作成')
 
 			create_user()
-			add_user(new_user, new_password,new_hinmei,new_suryo,new_yu_no,new_ad,new_atena,new_tel,new_omosa,new_other)
+			add_user(new_user, new_password,new_hinmei,new_suryo,new_yu_no,new_ad,new_ad2,new_ad3,new_atena,new_tel)
 			st.success("アカウントの作成に成功しました")
 		else:
 			print("ゼロ件ではないです")
@@ -128,7 +124,7 @@ def kanri():
 	c.execute('SELECT * FROM userstable')
 	data = c.fetchall()
 	df = pd.DataFrame(data)
-	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１','氏名', '電話番号','1冊の重さ','備考']
+	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
 	st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
 
 
@@ -157,7 +153,7 @@ def success_login(username):
 	c.execute('SELECT * FROM userstable WHERE username =?', (username,))
 	data = c.fetchall()
 	df = pd.DataFrame(data)
-	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１','氏名', '電話番号','1冊の重さ','備考']
+	df.columns = ['ユーザー名', 'パスワード','品名','数量', '郵便番号','住所１', '住所２','住所３','氏名', '電話番号']
 	st.dataframe(df.style.set_properties(**{'text-align': 'left', 'width': '100px'}))
 	#st.markdown(df.to_html(), unsafe_allow_html=True)
 	
